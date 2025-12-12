@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicació Interactiva Multi-Pàgina</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="page1" class="page">
+        <header>
+            <h1>🔒 Benvingut a l'Aplicació Segura</h1>
+        </header>
+        <main>
+            <p>Per accedir a la següent pàgina, introdueix el codi de 4 xifres (1234).</p>
+            <input type="password" id="accessCode" maxlength="4" placeholder="Codi (p. ex., 1234)">
+            <button onclick="checkCode()">Accedir a Pàgina 2</button>
+            <p id="codeMessage" class="message"></p>
+        </main>
+    </div>
+
+    <div id="page2" class="page hidden">
+        <header>
+            <h1>🔑 Verificació de Patró</h1>
+        </header>
+        <main>
+            <p>Per accedir a la Pàgina 3, selecciona tota la columna de l'esquerra en el patró de 5x5.</p>
+
+            <div id="patternGrid">
+                </div>
+
+            <button onclick="checkPattern()">Accedir a Pàgina 3</button>
+            <p id="patternMessage" class="message"></p>
+            <button onclick="goToPage(1)" class="back-button">Tornar a Pàgina 1</button>
+        </main>
+    </div>
+
+    <div id="page3" class="page hidden">
+        <header>
+            <h1>✅ Accés Concedit!</h1>
+        </header>
+        <main>
+            <p>Has superat totes les verificacions de seguretat. Aquesta és la tercera i última pàgina de l'aplicació.</p>
+            <p>Gràcies per utilitzar aquesta aplicació de demostració.</p>
+            <button onclick="goToPage(1)" class="back-button">Tornar a començar</button>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
