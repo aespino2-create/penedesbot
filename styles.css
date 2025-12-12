@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.page {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #007bff;
+    font-size: 1.8em;
+}
+
+input[type="password"], button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    box-sizing: border-box; /* Inclou padding i border en l'amplada total */
+}
+
+input[type="password"] {
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.back-button {
+    background-color: #6c757d;
+    margin-top: 20px;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+.message {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Estils de la Graella de Patrons 5x5 */
+#patternGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 5px;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Mantenir el marc quadrat */
+    margin: 20px auto;
+    border: 2px solid #ddd;
+    padding: 5px;
+    max-width: 300px; /* Limitar la mida de la graella */
+}
+
+.cell {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    aspect-ratio: 1 / 1;
+}
+
+.cell.selected {
+    background-color: #28a745;
+    border-color: #1e7e34;
+}
+
+/* Responsivitat (petites millores per a mòbils) */
+@media (max-width: 600px) {
+    .page {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 1.5em;
+    }
+    #patternGrid {
+        max-width: 250px;
+    }
+}
