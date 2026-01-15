@@ -1,50 +1,61 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e9ecef;
     color: #333;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    box-sizing: border-box;
 }
 
 .page {
     background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    width: 100%;
     max-width: 500px;
     text-align: center;
+    transition: all 0.3s ease-in-out;
 }
 
 .hidden {
-    display: none;
-}
-
-header {
-    margin-bottom: 20px;
+    display: none !important;
 }
 
 h1 {
-    color: #007bff;
-    font-size: 1.8em;
+    color: #2c3e50;
+    font-size: 1.6em;
+    margin-bottom: 1em;
 }
 
+/* Estils per a les imatges */
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.final-img {
+    border: 4px solid #ffd700; /* Marc daurat per la final */
+}
+
+/* Inputs i Botons Generals */
 input[type="password"], button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 15px;
-    border-radius: 4px;
-    box-sizing: border-box; /* Inclou padding i border en l'amplada total */
-}
-
-input[type="password"] {
-    border: 1px solid #ccc;
-    text-align: center;
-    font-size: 1.2em;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    box-sizing: border-box;
+    font-size: 1em;
 }
 
 button {
@@ -52,67 +63,92 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s;
+    font-weight: 600;
+    transition: background-color 0.2s;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
+button:hover { background-color: #0056b3; }
 
-.back-button {
-    background-color: #6c757d;
-    margin-top: 20px;
-}
+/* Botons Específics */
+.solucio-btn { background-color: #ffc107; color: #212529; }
+.solucio-btn:hover { background-color: #e0a800; }
 
-.back-button:hover {
-    background-color: #5a6268;
-}
+.endavant-btn { background-color: #28a745; }
+.endavant-btn:hover { background-color: #218838; }
+
+.back-button { background-color: #6c757d; margin-top: 10px; }
+.back-button:hover { background-color: #5a6268; }
 
 .message {
     font-weight: bold;
-    margin-top: 10px;
+    min-height: 1.2em; /* Reserva espai per evitar salts */
+    margin: 10px 0;
 }
 
-/* Estils de la Graella de Patrons 5x5 */
-#patternGrid {
+/* --- ESTILS PUZLE 2: Graella 5x5 --- */
+.grid-container {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
     gap: 5px;
     width: 100%;
-    aspect-ratio: 1 / 1; /* Mantenir el marc quadrat */
+    max-width: 300px;
+    aspect-ratio: 1 / 1;
     margin: 20px auto;
-    border: 2px solid #ddd;
-    padding: 5px;
-    max-width: 300px; /* Limitar la mida de la graella */
 }
 
-.cell {
+.cell-5x5 {
     background-color: #e9ecef;
-    border: 1px solid #ced4da;
+    border: 2px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    aspect-ratio: 1/1;
+}
+
+.cell-5x5.selected {
+    background-color: #007bff;
+    border-color: #0056b3;
+}
+
+/* --- ESTILS PUZLE 4: Patró Mòbil 3x3 --- */
+#mobilePatternContainer {
     display: flex;
     justify-content: center;
-    align-items: center;
+    margin: 20px 0;
+    touch-action: none; /* Important per a mòbils */
+}
+
+.pattern-3x3-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 60px);
+    gap: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    position: relative;
+}
+
+.dot-3x3 {
+    width: 30px;
+    height: 30px;
+    background-color: #adb5bd;
+    border-radius: 50%;
+    margin: auto;
     cursor: pointer;
-    transition: background-color 0.2s;
-    aspect-ratio: 1 / 1;
+    transition: transform 0.2s, background-color 0.2s;
+    position: relative;
+    z-index: 2;
 }
 
-.cell.selected {
-    background-color: #28a745;
-    border-color: #1e7e34;
+/* Quan passem per sobre o seleccionem un punt */
+.dot-3x3.hovered, .dot-3x3.active {
+    background-color: #007bff;
+    transform: scale(1.4);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
 }
 
-/* Responsivitat (petites millores per a mòbils) */
+/* Responsivitat */
 @media (max-width: 600px) {
-    .page {
-        padding: 20px;
-    }
-    h1 {
-        font-size: 1.5em;
-    }
-    #patternGrid {
-        max-width: 250px;
-    }
+    .page { padding: 15px; }
+    .pattern-3x3-grid { gap: 15px; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px); }
 }
