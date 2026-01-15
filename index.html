@@ -3,46 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicació Interactiva Multi-Pàgina</title>
+    <title>Gimcana d'Imatges i Puzles</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <div id="page1" class="page">
-        <header>
-            <h1>🔒 Benvingut a l'Aplicació Segura</h1>
-        </header>
+    <div id="page1" class="page img-page">
+        <header><h1>Pista Visual 1</h1></header>
         <main>
-            <p>Per accedir a la següent pàgina, introdueix el codi de 4 xifres (1234).</p>
-            <input type="password" id="accessCode" maxlength="4" placeholder="Codi (p. ex., 1234)">
-            <button onclick="checkCode()">Accedir a Pàgina 2</button>
-            <p id="codeMessage" class="message"></p>
+            <img src="imatge1.jpg" alt="Imatge 1" class="responsive-img">
+            <button onclick="goToPage(2)" class="solucio-btn">Solució</button>
         </main>
     </div>
 
-    <div id="page2" class="page hidden">
-        <header>
-            <h1>🔑 Verificació de Patró</h1>
-        </header>
+    <div id="page2" class="page puzzle-page hidden">
+        <header><h1>🔒 Puzle Numèric</h1></header>
         <main>
-            <p>Per accedir a la Pàgina 3, selecciona tota la columna de l'esquerra en el patró de 5x5.</p>
-
-            <div id="patternGrid">
-                </div>
-
-            <button onclick="checkPattern()">Accedir a Pàgina 3</button>
-            <p id="patternMessage" class="message"></p>
-            <button onclick="goToPage(1)" class="back-button">Tornar a Pàgina 1</button>
+            <p>Introdueix el codi de 4 xifres per desbloquejar la següent imatge.</p>
+            <input type="password" id="puzzle1Code" maxlength="4" placeholder="Codi (4 xifres)">
+            <button onclick="checkPuzzle1()">Comprovar</button>
+            <p id="msgPuzzle1" class="message"></p>
+            <button onclick="goToPage(1)" class="back-button">Tornar a Imatge 1</button>
         </main>
     </div>
 
-    <div id="page3" class="page hidden">
-        <header>
-            <h1>✅ Accés Concedit!</h1>
-        </header>
+    <div id="page3" class="page img-page hidden">
+        <header><h1>Pista Visual 2</h1></header>
         <main>
-            <p>Has superat totes les verificacions de seguretat. Aquesta és la tercera i última pàgina de l'aplicació.</p>
-            <p>Gràcies per utilitzar aquesta aplicació de demostració.</p>
+            <img src="imatge2.jpg" alt="Imatge 2" class="responsive-img">
+            <button onclick="goToPage(4)" class="solucio-btn">Solució</button>
+        </main>
+    </div>
+
+    <div id="page4" class="page puzzle-page hidden">
+        <header><h1>🔑 Puzle de Graella (5x5)</h1></header>
+        <main>
+            <p>Marca l'única casella correcta a la graella i clica "Endavant".</p>
+            <div id="patternGrid5x5" class="grid-container"></div>
+            <button onclick="checkPuzzle2()" class="endavant-btn">Endavant</button>
+            <p id="msgPuzzle2" class="message"></p>
+            <button onclick="goToPage(3)" class="back-button">Tornar a Imatge 2</button>
+        </main>
+    </div>
+
+    <div id="page5" class="page img-page hidden">
+        <header><h1>Pista Visual 3</h1></header>
+        <main>
+            <img src="imatge3.jpg" alt="Imatge 3" class="responsive-img">
+            <button onclick="goToPage(6)" class="solucio-btn">Solució</button>
+        </main>
+    </div>
+
+    <div id="page6" class="page puzzle-page hidden">
+        <header><h1>📝 Puzle de Paraula</h1></header>
+        <main>
+            <p>Introdueix la paraula clau de 5 lletres.</p>
+            <input type="password" id="puzzle3Word" maxlength="5" placeholder="Paraula">
+            <button onclick="checkPuzzle3()" class="endavant-btn">Endavant</button>
+            <p id="msgPuzzle3" class="message"></p>
+            <button onclick="goToPage(5)" class="back-button">Tornar a Imatge 3</button>
+        </main>
+    </div>
+
+    <div id="page7" class="page img-page hidden">
+        <header><h1>Pista Visual 4</h1></header>
+        <main>
+            <img src="imatge4.jpg" alt="Imatge 4" class="responsive-img">
+            <button onclick="goToPage(8)" class="solucio-btn">Solució</button>
+        </main>
+    </div>
+
+    <div id="page8" class="page puzzle-page hidden">
+        <header><h1>📱 Puzle de Patró (Tipus Mòbil)</h1></header>
+        <main>
+            <p>Dibuixa una 'M' unint els punts (mantantingues el clic premut).</p>
+            <div id="mobilePatternContainer">
+                <div id="pattern3x3" class="pattern-3x3-grid">
+                    </div>
+            </div>
+            <p id="msgPuzzle4" class="message"></p>
+            <button onclick="resetMobilePattern()" class="back-button" style="margin-top: 10px;">Reiniciar Patró</button>
+            <button onclick="goToPage(7)" class="back-button">Tornar a Imatge 4</button>
+        </main>
+    </div>
+
+    <div id="page9" class="page img-page hidden">
+        <header><h1>🎉 Imatge Final! 🎉</h1></header>
+        <main>
+            <p>Felicitats! Has completat tots els reptes.</p>
+            <img src="imatge5.jpg" alt="Imatge Final" class="responsive-img final-img">
             <button onclick="goToPage(1)" class="back-button">Tornar a començar</button>
         </main>
     </div>
