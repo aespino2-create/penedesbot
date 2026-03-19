@@ -3,111 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gimcana Digital - Escoles</title>
+    <title>Gimcana Digital - Microbitada</title>
     <style>
         :root {
-            --primary: #4a90e2;
-            --secondary: #f39c12;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --dark: #2c3e50;
-            --light: #f4f7f6;
+            --primary: #4a90e2; --secondary: #f39c12; --danger: #e74c3c;
+            --success: #2ecc71; --dark: #2c3e50; --light: #f4f7f6;
         }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #e9ecef;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 95%;
-            max-width: 650px;
-            text-align: center;
-        }
-
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 95%; max-width: 650px; text-align: center; }
         .hidden { display: none !important; }
-
-        /* Formularis i Selects */
-        select, input {
-            width: 90%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        /* Botons */
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
+        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        button { padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-main { background-color: var(--primary); color: white; }
         .btn-start { background-color: var(--success); color: white; font-size: 1.5rem; }
         .btn-nav { background-color: var(--dark); color: white; }
         .btn-finish { background-color: var(--danger); color: white; width: 100%; }
-
-        /* Visor d'Imatges */
-        .viewer-container {
-            position: relative;
-            background: #000;
-            border-radius: 10px;
-            margin: 20px 0;
-            line-height: 0;
-            overflow: hidden;
-        }
-
-        .viewer-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 0 0 10px 10px;
-        }
-
-        /* Zona de Codi */
-        .lock-box {
-            background: #fff3cd;
-            padding: 20px;
-            border: 2px dashed #ffc107;
-            border-radius: 10px;
-            margin: 15px 0;
-        }
-
-        #code-input {
-            width: 100px;
-            text-align: center;
-            font-size: 2rem;
-            letter-spacing: 5px;
-        }
-
-        /* Cronòmetre */
-        #display-timer {
-            font-size: 2.5rem;
-            font-family: monospace;
-            color: var(--danger);
-            margin: 10px 0;
-        }
+        .viewer-container { position: relative; background: #000; border-radius: 10px; margin: 20px 0; line-height: 0; overflow: hidden; min-height: 250px; }
+        .viewer-img { width: 100%; height: auto; display: block; }
+        .nav-buttons { display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; border-radius: 0 0 10px 10px; }
+        .lock-box { background: #fff3cd; padding: 20px; border: 2px dashed #ffc107; border-radius: 10px; margin: 15px 0; }
+        #code-input { width: 100px; text-align: center; font-size: 2rem; letter-spacing: 5px; }
+        #display-timer { font-size: 2.5rem; font-family: monospace; color: var(--danger); margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -115,7 +31,7 @@
 <div class="container">
     
     <div id="step-school">
-        <h2>Benvinguts al Repte</h2>
+        <h2>Benvinguts a la Microbitada</h2>
         <p>Selecciona la teva escola per començar:</p>
         <select id="school-list">
             <option value="" disabled selected>Tria escola...</option>
@@ -155,24 +71,20 @@
 
     <div id="step-challenge" class="hidden">
         <div id="display-timer">00:00</div>
-        
         <div class="viewer-container">
-            <img src="" id="current-img" class="viewer-img">
+            <img src="" id="current-img" class="viewer-img" alt="Carregant imatge...">
         </div>
-
         <div id="navigation-zone" class="nav-buttons">
             <button id="btn-prev" class="btn-nav" onclick="nav(-1)">⬅ Enrere</button>
             <button id="btn-next" class="btn-nav" onclick="nav(1)">Endavant ➡</button>
         </div>
-
         <div id="lock-zone" class="lock-box hidden">
             <h3>🔒 REPTE BLOQUEJAT</h3>
-            <p>Introdueix el codi de 3 xifres per seguir:</p>
+            <p>Introdueix el codi de 3 xifres:</p>
             <input type="number" id="code-input" placeholder="000">
             <br>
-            <button class="btn-main" onclick="validateCode()">VERIFICAR CODI</button>
+            <button class="btn-main" onclick="validateCode()">VERIFICAR</button>
         </div>
-
         <button id="btn-finish-all" class="btn-finish hidden" onclick="endGroupSession()">🏆 ACABAR REPTE 🏆</button>
     </div>
 
@@ -180,67 +92,66 @@
         <h2>Classificació Final</h2>
         <h4 id="result-school-title"></h4>
         <table style="width:100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background:#ddd"><th>Pos</th><th>Grup</th><th>Temps</th></tr>
-            </thead>
+            <thead><tr style="background:#ddd"><th>Pos</th><th>Grup</th><th>Temps</th></tr></thead>
             <tbody id="leaderboard-rows"></tbody>
         </table>
-        <br>
-        <button class="btn-main" onclick="location.reload()">Nou Joc</button>
+        <br><button class="btn-main" onclick="location.reload()">Nou Joc</button>
     </div>
-
 </div>
 
 <script>
-    // --- CONFIGURACIÓ ---
-    // Substitueix aquestes URLs quan les tinguis a GitHub
+    // --- CONFIGURACIÓ URLS ---
     const BASE_URL = "https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main";
     const images = [
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/01.jpg, 
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/02.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/03.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/04.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/05.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/06.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/07.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/08.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/09.jpg,
-    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/10.jpg,
+        BASE_URL + "/01.jpg",
+        BASE_URL + "/02.jpg",
+        BASE_URL + "/03.jpg",
+        BASE_URL + "/04.jpg",
+        BASE_URL + "/05.jpg",
+        BASE_URL + "/06.jpg",
+        BASE_URL + "/07.jpg",
+        BASE_URL + "/08.jpg",
+        BASE_URL + "/09.jpg",
+        BASE_URL + "/10.jpg"
     ];
     const SECRET_CODE = "123"; 
 
-    // --- VARIABLES ESTAT ---
+    // --- ESTAT ---
     let school = "";
     let allGroups = [];
     let tempGroup = { name: "", members: [] };
     let namingPhase = true;
     let activeGroupIdx = 0;
     let currentImgIdx = 0;
-    let timer;
+    let timerInterval;
     let startTime;
     let codeUnlocked = false;
     let finalRanking = [];
 
-    // --- LÒGICA ESCOLA ---
+    // --- FUNCIONS NAVEGACIÓ ---
     function goToGroups() {
-        school = document.getElementById('school-list').value;
-        if(!school) return alert("Tria una escola!");
+        const list = document.getElementById('school-list');
+        school = list.value;
+        if(!school) {
+            alert("Si us plau, tria una escola.");
+            return;
+        }
         document.getElementById('step-school').classList.add('hidden');
         document.getElementById('step-groups').classList.remove('hidden');
-        document.getElementById('school-name-header').innerText = school;
+        document.getElementById('school-name-header').innerText = "Escola: " + school;
     }
 
-    // --- LÒGICA GRUPS ---
     function processLogic() {
-        const val = document.getElementById('main-input').value.trim();
+        const input = document.getElementById('main-input');
+        const val = input.value.trim();
         if(!val) return;
 
         if(namingPhase) {
             tempGroup.name = val;
             namingPhase = false;
-            document.getElementById('main-input').value = "";
-            document.getElementById('main-input').placeholder = "Nom de l'alumne";
-            document.getElementById('group-title').innerText = "Alumnes de " + tempGroup.name;
+            input.value = "";
+            input.placeholder = "Nom de l'alumne";
+            document.getElementById('group-title').innerText = "Membres de: " + tempGroup.name;
             document.getElementById('action-btn').innerText = "Afegir Alumne";
             document.getElementById('group-preview').classList.remove('hidden');
         } else {
@@ -248,17 +159,18 @@
             const li = document.createElement('li');
             li.textContent = val;
             document.getElementById('list-members').appendChild(li);
-            document.getElementById('main-input').value = "";
+            input.value = "";
             document.getElementById('next-group-btn').classList.remove('hidden');
             document.getElementById('finalize-btn').classList.remove('hidden');
         }
     }
 
     function resetForNewGroup() {
-        allGroups.push({...tempGroup});
+        allGroups.push(JSON.parse(JSON.stringify(tempGroup)));
         tempGroup = { name: "", members: [] };
         namingPhase = true;
-        document.getElementById('main-input').placeholder = "Nom del grup";
+        const input = document.getElementById('main-input');
+        input.placeholder = "Nom del grup";
         document.getElementById('group-title').innerText = "Nom del Grup " + (allGroups.length + 1);
         document.getElementById('action-btn').innerText = "Afegir Grup";
         document.getElementById('list-members').innerHTML = "";
@@ -267,36 +179,36 @@
     }
 
     function prepareToStart() {
-        if(tempGroup.name) allGroups.push({...tempGroup});
+        if(tempGroup.name) allGroups.push(JSON.parse(JSON.stringify(tempGroup)));
         document.getElementById('step-groups').classList.add('hidden');
         document.getElementById('step-start').classList.remove('hidden');
         document.getElementById('current-group-name').innerText = allGroups[activeGroupIdx].name;
     }
 
-    // --- LÒGICA JOC ---
     function initChallenge() {
         document.getElementById('step-start').classList.add('hidden');
         document.getElementById('step-challenge').classList.remove('hidden');
         currentImgIdx = 0;
         codeUnlocked = false;
         updateViewer();
-        
         startTime = Date.now();
-        timer = setInterval(() => {
-            const diff = Date.now() - startTime;
-            const m = Math.floor(diff/60000).toString().padStart(2,'0');
-            const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
-            document.getElementById('display-timer').innerText = `${m}:${s}`;
-        }, 1000);
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+        const diff = Date.now() - startTime;
+        const m = Math.floor(diff/60000).toString().padStart(2,'0');
+        const s = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+        document.getElementById('display-timer').innerText = m + ":" + s;
     }
 
     function updateViewer() {
-        document.getElementById('current-img').src = images[currentImgIdx];
+        const img = document.getElementById('current-img');
+        img.src = images[currentImgIdx];
         
-        // Control botó enrere
         document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
         
-        // Control zona codi (després de la imatge 5 - índex 5)
+        // Bloqueig a la imatge 6 (índex 5)
         if(currentImgIdx === 5 && !codeUnlocked) {
             document.getElementById('navigation-zone').classList.add('hidden');
             document.getElementById('lock-zone').classList.remove('hidden');
@@ -305,8 +217,7 @@
             document.getElementById('lock-zone').classList.add('hidden');
         }
 
-        // Control botó final (imatge 9)
-        if(currentImgIdx === 9) {
+        if(currentImgIdx === images.length - 1) {
             document.getElementById('btn-next').classList.add('hidden');
             document.getElementById('btn-finish-all').classList.remove('hidden');
         } else {
@@ -323,27 +234,26 @@
     function validateCode() {
         const input = document.getElementById('code-input').value;
         if(input === SECRET_CODE) {
-            alert("🔓 Codi correcte!");
             codeUnlocked = true;
             nav(1);
         } else {
-            alert("❌ Codi incorrecte!");
+            alert("Codi incorrecte!");
         }
     }
 
     function endGroupSession() {
-        clearInterval(timer);
+        clearInterval(timerInterval);
         const timeStr = document.getElementById('display-timer').innerText;
-        const timeMs = Date.now() - startTime;
-
-        finalRanking.push({ name: allGroups[activeGroupIdx].name, timeStr, timeMs });
+        finalRanking.push({ 
+            name: allGroups[activeGroupIdx].name, 
+            timeStr: timeStr, 
+            timeMs: Date.now() - startTime 
+        });
         activeGroupIdx++;
-
         if(activeGroupIdx < allGroups.length) {
             document.getElementById('step-challenge').classList.add('hidden');
             document.getElementById('step-start').classList.remove('hidden');
             document.getElementById('current-group-name').innerText = allGroups[activeGroupIdx].name;
-            document.getElementById('display-timer').innerText = "00:00";
         } else {
             showFinalResults();
         }
@@ -352,12 +262,12 @@
     function showFinalResults() {
         document.getElementById('step-challenge').classList.add('hidden');
         document.getElementById('step-results').classList.remove('hidden');
-        document.getElementById('result-school-title').innerText = school;
-
+        document.getElementById('result-school-title').innerText = "Escola: " + school;
         finalRanking.sort((a,b) => a.timeMs - b.timeMs);
         const tbody = document.getElementById('leaderboard-rows');
+        tbody.innerHTML = "";
         finalRanking.forEach((res, i) => {
-            tbody.innerHTML += `<tr><td>${i+1}</td><td>${res.name}</td><td>${res.timeStr}</td></tr>`;
+            tbody.innerHTML += "<tr><td>" + (i+1) + "</td><td>" + res.name + "</td><td>" + res.timeStr + "</td></tr>";
         });
     }
 </script>
