@@ -1,0 +1,16 @@
+// 1. Canvia la base pel teu usuari i repositori
+const BASE_URL = "https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main";
+
+// 2. Comprova que els noms coincideixin (img1.jpg, img2.jpg...)
+const images = [
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/01.jpg, 
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/02.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/03.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/04.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/05.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/06.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/07.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/08.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/09.jpg,
+    https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main/10.jpg,
+];
