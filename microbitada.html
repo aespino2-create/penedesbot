@@ -247,9 +247,9 @@
         
         const dades = new URLSearchParams();
         // Substitueix entry.XXXXX pels números que t'ha donat el formulari
-        dades.append('entry.1631258756_ESCOLA', escola); 
-        dades.append('entry.1277977719_GRUP', grup);   
-        dades.append('entry.1028009594_TEMPS', temps);  
+        dades.append('entry.1631258756', escola); 
+        dades.append('entry.1277977719', grup);   
+        dades.append('entry.1028009594', temps);  
 
         fetch(formURL, {
             method: 'POST',
