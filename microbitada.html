@@ -208,7 +208,6 @@
         
         document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
         
-        // Bloqueig a la imatge 6 (índex 5)
         if(currentImgIdx === 5 && !codeUnlocked) {
             document.getElementById('navigation-zone').classList.add('hidden');
             document.getElementById('lock-zone').classList.remove('hidden');
@@ -241,14 +240,40 @@
         }
     }
 
+    // --- FUNCIÓ GOOGLE SHEETS ---
+    function enviarAGoogleSheets(escola, grup, temps) {
+        // SUBSTITUEIX "ID_FORMULARI" pel codi llarg del teu Google Form
+        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvo_g3lmgF3-olwtcpW2-ubQmXN5QC8lOazSiriLIGz1u5cQ/formResponse";
+        
+        const dades = new URLSearchParams();
+        // Substitueix entry.XXXXX pels números que t'ha donat el formulari
+        dades.append('entry.1631258756_ESCOLA', escola); 
+        dades.append('entry.1277977719_GRUP', grup);   
+        dades.append('entry.1028009594_TEMPS', temps);  
+
+        fetch(formURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: dades
+        }).then(() => {
+            console.log("Enviat a Google Sheets");
+        }).catch(err => console.log("Error enviant:", err));
+    }
+
     function endGroupSession() {
         clearInterval(timerInterval);
         const timeStr = document.getElementById('display-timer').innerText;
+        const currentGroupName = allGroups[activeGroupIdx].name;
+
+        // ENVIAR DADES AL FULL DE CÀLCUL
+        enviarAGoogleSheets(school, currentGroupName, timeStr);
+
         finalRanking.push({ 
-            name: allGroups[activeGroupIdx].name, 
+            name: currentGroupName, 
             timeStr: timeStr, 
             timeMs: Date.now() - startTime 
         });
+        
         activeGroupIdx++;
         if(activeGroupIdx < allGroups.length) {
             document.getElementById('step-challenge').classList.add('hidden');
