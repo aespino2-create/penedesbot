@@ -19,7 +19,6 @@
         .viewer-img { width: 100%; height: auto; display: block; }
         .nav-buttons { display: flex; justify-content: space-between; padding: 10px; }
         
-        /* Disseny Matriu 5x5 */
         .grid-5x5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; width: 225px; margin: 15px auto; }
         .cell { width: 40px; height: 40px; background: #eee; border: 1px solid #ccc; cursor: pointer; border-radius: 4px; }
         .cell.active { background: var(--secondary); box-shadow: inset 0 0 8px rgba(0,0,0,0.2); }
@@ -36,15 +35,15 @@
         <h2>Benvinguts a la Microbitada</h2>
         <select id="school-list">
             <option value="" disabled selected>Tria escola...</option>
-            <option value="Escola 1">Escola 1</option><option value="Escola 2">Escola 2</option>
-            <option value="Escola 3">Escola 3</option><option value="Escola 4">Escola 4</option>
+            <option value="Escola 1">Sant Domènec de la Ràpita (Santa Margarida i els Monjos)</option><option value="Escola 2">Ull de Vent (la Bisbal del Penedès)</option>
+            <option value="Escola 3">La Parellada (Santa Oliva)</option><option value="Escola 4">Escola 4</option>
             <option value="Escola 5">Escola 5</option><option value="Escola 6">Escola 6</option>
         </select><br><br>
         <button class="btn-main" onclick="goToGroups()">Següent</button>
     </div>
 
     <div id="step-groups" class="hidden">
-        <p style="color:var(--danger); font-weight:bold;">⚠️ Comença el nom amb el número d'equip (1-5)</p>
+        <p style="color:var(--danger); font-weight:bold;">⚠️ El nom ha de començar per l'equip (1-5)</p>
         <h2 id="group-title">Nom del Grup</h2>
         <input type="text" id="main-input" placeholder="Ex: 1 Els Súpers">
         <div id="group-preview" class="hidden" style="text-align:left; background:#f8f9fa; padding:10px; margin:10px auto; width:80%;">
@@ -64,9 +63,7 @@
 
     <div id="step-challenge" class="hidden">
         <div id="display-timer">00:00</div>
-        <div class="viewer-container">
-            <img src="" id="current-img" class="viewer-img">
-        </div>
+        <div class="viewer-container"><img src="" id="current-img" class="viewer-img"></div>
         
         <div id="navigation-zone" class="nav-buttons">
             <button id="btn-prev" class="btn-nav" onclick="nav(-1)">⬅ Enrere</button>
@@ -75,25 +72,22 @@
 
         <div id="lock-zone" class="lock-box hidden">
             <h3 id="lock-title">🔒 REPTE BLOQUEJAT</h3>
-            
             <div id="ui-code-container">
                 <input type="text" id="code-input" placeholder="Escriu aquí...">
                 <button class="btn-main" onclick="validateLock()">VERIFICAR</button>
             </div>
-
             <div id="ui-matrix-container" class="hidden">
                 <div class="grid-5x5" id="matrix-grid"></div>
                 <button class="btn-main" onclick="validateLock()">VERIFICAR PATRÓ</button>
             </div>
         </div>
-
         <button id="btn-finish-all" class="btn-finish hidden" onclick="endGroupSession()">🏆 ACABAR GIMCANA 🏆</button>
     </div>
 
     <div id="step-results" class="hidden">
         <h2>Classificació Final</h2>
         <table style="width:100%; border-collapse: collapse;" id="leaderboard">
-            <thead><tr style="background:#ddd"><th>Pos</th><th>Grup</th><th>Temps</th></tr></thead>
+            <thead><tr style="background:#ddd"><th>Pos</th><th>Grup</th><th>Temps Total</th></tr></thead>
             <tbody id="leaderboard-rows"></tbody>
         </table>
         <br><button class="btn-main" onclick="location.reload()">Nou Joc</button>
@@ -103,7 +97,6 @@
 <script>
     const BASE_URL = "https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main";
     
-    // CLAUS PER EQUIP (1 a 5)
     const GROUP_KEYS = {
         "1": { c3: "123", p1: [0,1,2], word: "ROBOTS", c4: "4444", p2: [20,21,22] },
         "2": { c3: "456", p1: [5,6,7], word: "CODING", c4: "1122", p2: [15,16,17] },
@@ -112,20 +105,21 @@
         "5": { c3: "654", p1: [1,2,3], word: "FUTURE", c4: "5555", p2: [0,6,12] }
     };
 
-    // Estructura del joc: quan s'arriba a X imatge, bloqueja.
     const GAME_FLOW = [
-        { imgTrigger: 5,  type: 'code',   key: 'c3', title: "Codi de 3 xifres" }, // Després de 6 imatges (0-5)
-        { imgTrigger: 9,  type: 'matrix', key: 'p1', title: "Patró 5x5 (1)" },      // Després de 4 imatges més
-        { imgTrigger: 13, type: 'code',   key: 'word', title: "Paraula de 6 lletres" }, // Després de 4 imatges més
-        { imgTrigger: 17, type: 'code',   key: 'c4', title: "Codi de 4 xifres" }, // Després de 4 imatges més
-        { imgTrigger: 22, type: 'matrix', key: 'p2', title: "Patró 5x5 Final" }      // Després de 5 imatges més
+        { imgTrigger: 5,  type: 'code',   key: 'c3', title: "Codi de 3 xifres" },
+        { imgTrigger: 9,  type: 'matrix', key: 'p1', title: "Patró 5x5 (1)" },
+        { imgTrigger: 13, type: 'code',   key: 'word', title: "Paraula de 6 lletres" },
+        { imgTrigger: 17, type: 'code',   key: 'c4', title: "Codi de 4 xifres" },
+        { imgTrigger: 22, type: 'matrix', key: 'p2', title: "Patró 5x5 Final" }
     ];
 
     let school = "", allGroups = [], tempGroup = { name: "", members: [] };
     let activeGroupIdx = 0, currentImgIdx = 0, timerInterval, startTime, currentGroupNum = "1";
     let finalRanking = [];
+    
+    // VARIABLE PER ALS TEMPS PARCIALS
+    let tempsReptes = { r1: "", r2: "", r3: "", r4: "" };
 
-    // Crear la matriu visualment
     const matrixGrid = document.getElementById('matrix-grid');
     for(let i=0; i<25; i++) {
         let cell = document.createElement('div');
@@ -174,7 +168,7 @@
         document.getElementById('step-start').classList.remove('hidden');
         let gName = allGroups[activeGroupIdx].name;
         document.getElementById('current-group-name').innerText = gName;
-        currentGroupNum = gName.charAt(0); // Identifica 1, 2, 3, 4 o 5
+        currentGroupNum = gName.charAt(0);
         if(!GROUP_KEYS[currentGroupNum]) currentGroupNum = "1"; 
     }
 
@@ -183,6 +177,7 @@
         document.getElementById('step-challenge').classList.remove('hidden');
         currentImgIdx = 0;
         GAME_FLOW.forEach(f => f.passed = false);
+        tempsReptes = { r1: "", r2: "", r3: "", r4: "" }; // Reiniciem parcials
         updateViewer();
         startTime = Date.now();
         timerInterval = setInterval(updateTimer, 1000);
@@ -196,7 +191,6 @@
     }
 
     function updateViewer() {
-        // Carrega imatges del 01.jpg al 25.jpg
         const imgNum = (currentImgIdx + 1).toString().padStart(2,'0');
         document.getElementById('current-img').src = `${BASE_URL}/${imgNum}.jpg`;
 
@@ -221,7 +215,6 @@
             document.getElementById('lock-zone').classList.add('hidden');
             document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
             
-            // L'última imatge és la 24 (total 25)
             if(currentImgIdx >= 24) {
                 document.getElementById('btn-next').classList.add('hidden');
                 document.getElementById('btn-finish-all').classList.remove('hidden');
@@ -249,6 +242,13 @@
         }
 
         if(isCorrect) {
+            // REGISTRE DE TEMPS PARCIALS
+            const tActual = document.getElementById('display-timer').innerText;
+            if (lock.key === 'c3') tempsReptes.r1 = tActual;
+            if (lock.key === 'p1') tempsReptes.r2 = tActual;
+            if (lock.key === 'word') tempsReptes.r3 = tActual;
+            if (lock.key === 'c4') tempsReptes.r4 = tActual;
+
             lock.passed = true;
             nav(1);
         } else {
@@ -263,18 +263,25 @@
 
     function endGroupSession() {
         clearInterval(timerInterval);
-        const timeStr = document.getElementById('display-timer').innerText;
+        const timeTotal = document.getElementById('display-timer').innerText;
         const gName = allGroups[activeGroupIdx].name;
 
-        // Enviament Google Sheets
+        // ENVIAMENT A GOOGLE SHEETS AMB PARCIALS
         const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvo_g3lmgF3-olwtcpW2-ubQmXN5QC8lOazSiriLIGz1u5cQ/formResponse";
         const d = new URLSearchParams();
         d.append('entry.1631258756', school);
         d.append('entry.1277977719', gName);
-        d.append('entry.1028009594', timeStr);
+        d.append('entry.1028009594', timeTotal);
+        
+        // SUBSTITUEIX ELS NÚMEROS PER ELS DEL TEU FORMULARI
+        d.append('entry.1491782480', tempsReptes.r1); 
+        d.append('entry.528386202', tempsReptes.r2);
+        d.append('entry.622185759', tempsReptes.r3);
+        d.append('entry.792747908', tempsReptes.r4);
+
         fetch(formURL, { method: 'POST', mode: 'no-cors', body: d });
 
-        finalRanking.push({ name: gName, time: timeStr, ms: Date.now() - startTime });
+        finalRanking.push({ name: gName, time: timeTotal, ms: Date.now() - startTime });
         
         activeGroupIdx++;
         if(activeGroupIdx < allGroups.length) {
