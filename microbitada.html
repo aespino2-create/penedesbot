@@ -23,9 +23,10 @@
         .cell { width: 40px; height: 40px; background: #eee; border: 1px solid #ccc; cursor: pointer; border-radius: 4px; }
         .cell.active { background: var(--secondary); box-shadow: inset 0 0 8px rgba(0,0,0,0.2); }
         
-        .lock-box { background: #fff3cd; padding: 20px; border: 2px dashed #ffc107; border-radius: 10px; margin: 15px 0; }
+        .lock-box { background: #fff3cd; padding: 25px; border: 2px dashed #ffc107; border-radius: 10px; margin: 15px 0; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         #display-timer { font-size: 2.5rem; font-family: monospace; color: var(--danger); margin: 10px 0; }
         #code-input { width: 80%; text-align: center; font-size: 1.5rem; }
+        .lock-footer { margin-top: 20px; width: 100%; display: flex; justify-content: flex-start; }
     </style>
 </head>
 <body>
@@ -35,9 +36,12 @@
         <h2>Benvinguts a la Microbitada</h2>
         <select id="school-list">
             <option value="" disabled selected>Tria escola...</option>
-            <option value="Escola 1">Sant Domènec de la Ràpita (Santa Margarida i els Monjos)</option><option value="Escola 2">Ull de Vent (la Bisbal del Penedès)</option>
-            <option value="Escola 3">La Parellada (Santa Oliva)</option><option value="Escola 4">Escola 4</option>
-            <option value="Escola 5">Escola 5</option><option value="Escola 6">Escola 6</option>
+            <option value="Escola 1">Sant Domènec de la Ràpita (Santa Margarida i els Monjos)</option>
+            <option value="Escola 2">Ull de Vent (la Bisbal del Penedès)</option>
+            <option value="Escola 3">La Parellada (Santa Oliva)</option>
+            <option value="Escola 4">Escola 4</option>
+            <option value="Escola 5">Escola 5</option>
+            <option value="Escola 6">Escola 6</option>
         </select><br><br>
         <button class="btn-main" onclick="goToGroups()">Següent</button>
     </div>
@@ -63,11 +67,13 @@
 
     <div id="step-challenge" class="hidden">
         <div id="display-timer">00:00</div>
-        <div class="viewer-container"><img src="" id="current-img" class="viewer-img"></div>
         
-        <div id="navigation-zone" class="nav-buttons">
-            <button id="btn-prev" class="btn-nav" onclick="nav(-1)">⬅ Enrere</button>
-            <button id="btn-next" class="btn-nav" onclick="nav(1)">Endavant ➡</button>
+        <div id="viewer-zone">
+            <div class="viewer-container"><img src="" id="current-img" class="viewer-img"></div>
+            <div id="navigation-zone" class="nav-buttons">
+                <button id="btn-prev" class="btn-nav" onclick="nav(-1)">⬅ Enrere</button>
+                <button id="btn-next" class="btn-nav" onclick="nav(1)">Endavant ➡</button>
+            </div>
         </div>
 
         <div id="lock-zone" class="lock-box hidden">
@@ -80,7 +86,11 @@
                 <div class="grid-5x5" id="matrix-grid"></div>
                 <button class="btn-main" onclick="validateLock()">VERIFICAR PATRÓ</button>
             </div>
+            <div class="lock-footer">
+                <button class="btn-nav" onclick="nav(-1)">⬅ Tornar a la pista</button>
+            </div>
         </div>
+
         <button id="btn-finish-all" class="btn-finish hidden" onclick="endGroupSession()">🏆 ACABAR GIMCANA 🏆</button>
     </div>
 
@@ -105,20 +115,18 @@
         "5": { c3: "654", p1: [1,2,3], word: "FUTURE", c4: "5555", p2: [0,6,12] }
     };
 
+    // Els triggers ara apunten a la posició lògica on "salta" el bloqueig
     const GAME_FLOW = [
-        { imgTrigger: 5,  type: 'code',   key: 'c3', title: "Codi de 3 xifres" },
-        { imgTrigger: 9,  type: 'matrix', key: 'p1', title: "Patró 5x5 (1)" },
-        { imgTrigger: 13, type: 'code',   key: 'word', title: "Paraula de 6 lletres" },
-        { imgTrigger: 17, type: 'code',   key: 'c4', title: "Codi de 4 xifres" },
-        { imgTrigger: 22, type: 'matrix', key: 'p2', title: "Patró 5x5 Final" }
+        { imgTrigger: 6,  type: 'code',   key: 'c3', title: "Codi de 3 xifres" },
+        { imgTrigger: 11, type: 'matrix', key: 'p1', title: "Patró 5x5 (1)" },
+        { imgTrigger: 16, type: 'code',   key: 'word', title: "Paraula de 6 lletres" },
+        { imgTrigger: 21, type: 'code',   key: 'c4', title: "Codi de 4 xifres" },
+        { imgTrigger: 27, type: 'matrix', key: 'p2', title: "Patró 5x5 Final" }
     ];
 
     let school = "", allGroups = [], tempGroup = { name: "", members: [] };
     let activeGroupIdx = 0, currentImgIdx = 0, timerInterval, startTime, currentGroupNum = "1";
-    let finalRanking = [];
-    
-    // VARIABLE PER ALS TEMPS PARCIALS
-    let tempsReptes = { r1: "", r2: "", r3: "", r4: "" };
+    let finalRanking = [], tempsReptes = { r1: "", r2: "", r3: "", r4: "" };
 
     const matrixGrid = document.getElementById('matrix-grid');
     for(let i=0; i<25; i++) {
@@ -177,7 +185,7 @@
         document.getElementById('step-challenge').classList.remove('hidden');
         currentImgIdx = 0;
         GAME_FLOW.forEach(f => f.passed = false);
-        tempsReptes = { r1: "", r2: "", r3: "", r4: "" }; // Reiniciem parcials
+        tempsReptes = { r1: "", r2: "", r3: "", r4: "" };
         updateViewer();
         startTime = Date.now();
         timerInterval = setInterval(updateTimer, 1000);
@@ -191,14 +199,12 @@
     }
 
     function updateViewer() {
-        const imgNum = (currentImgIdx + 1).toString().padStart(2,'0');
-        document.getElementById('current-img').src = `${BASE_URL}/${imgNum}.jpg`;
-
         const lock = GAME_FLOW.find(f => f.imgTrigger === currentImgIdx);
         
         if(lock && !lock.passed) {
-            document.getElementById('navigation-zone').classList.add('hidden');
+            document.getElementById('viewer-zone').classList.add('hidden');
             document.getElementById('lock-zone').classList.remove('hidden');
+            document.getElementById('btn-finish-all').classList.add('hidden');
             document.getElementById('lock-title').innerText = "🔒 " + lock.title;
             
             if(lock.type === 'matrix') {
@@ -211,11 +217,19 @@
                 document.getElementById('code-input').value = "";
             }
         } else {
-            document.getElementById('navigation-zone').classList.remove('hidden');
+            document.getElementById('viewer-zone').classList.remove('hidden');
             document.getElementById('lock-zone').classList.add('hidden');
+            
+            // Calculem la imatge real restant els punts de bloqueig superats
+            let realImgIdx = currentImgIdx;
+            GAME_FLOW.forEach(f => { if(currentImgIdx > f.imgTrigger) realImgIdx--; });
+            
+            const imgNum = (realImgIdx + 1).toString().padStart(2,'0');
+            document.getElementById('current-img').src = `${BASE_URL}/${imgNum}.jpg`;
+
             document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
             
-            if(currentImgIdx >= 24) {
+            if(realImgIdx >= 24) {
                 document.getElementById('btn-next').classList.add('hidden');
                 document.getElementById('btn-finish-all').classList.remove('hidden');
             } else {
@@ -242,7 +256,6 @@
         }
 
         if(isCorrect) {
-            // REGISTRE DE TEMPS PARCIALS
             const tActual = document.getElementById('display-timer').innerText;
             if (lock.key === 'c3') tempsReptes.r1 = tActual;
             if (lock.key === 'p1') tempsReptes.r2 = tActual;
@@ -266,21 +279,17 @@
         const timeTotal = document.getElementById('display-timer').innerText;
         const gName = allGroups[activeGroupIdx].name;
 
-        // ENVIAMENT A GOOGLE SHEETS AMB PARCIALS
         const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvo_g3lmgF3-olwtcpW2-ubQmXN5QC8lOazSiriLIGz1u5cQ/formResponse";
         const d = new URLSearchParams();
         d.append('entry.1631258756', school);
         d.append('entry.1277977719', gName);
         d.append('entry.1028009594', timeTotal);
-        
-        // SUBSTITUEIX ELS NÚMEROS PER ELS DEL TEU FORMULARI
         d.append('entry.1491782480', tempsReptes.r1); 
         d.append('entry.528386202', tempsReptes.r2);
         d.append('entry.622185759', tempsReptes.r3);
         d.append('entry.792747908', tempsReptes.r4);
 
         fetch(formURL, { method: 'POST', mode: 'no-cors', body: d });
-
         finalRanking.push({ name: gName, time: timeTotal, ms: Date.now() - startTime });
         
         activeGroupIdx++;
