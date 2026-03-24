@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gimcana Digital - Microbitada</title>
     <style>
-        :root {
-            --primary: #4a90e2; --secondary: #f39c12; --danger: #e74c3c;
-            --success: #2ecc71; --dark: #2c3e50; --light: #f4f7f6;
-        }
+        :root { --primary: #4a90e2; --secondary: #f39c12; --danger: #e74c3c; --success: #2ecc71; --dark: #2c3e50; }
         body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .container { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 95%; max-width: 650px; text-align: center; }
         .hidden { display: none !important; }
@@ -17,48 +14,44 @@
         .btn-main { background-color: var(--primary); color: white; }
         .btn-start { background-color: var(--success); color: white; font-size: 1.5rem; }
         .btn-nav { background-color: var(--dark); color: white; }
-        .btn-finish { background-color: var(--danger); color: white; width: 100%; }
-        .viewer-container { position: relative; background: #000; border-radius: 10px; margin: 20px 0; line-height: 0; overflow: hidden; min-height: 250px; }
+        .btn-finish { background-color: var(--danger); color: white; width: 100%; margin-top: 10px; }
+        .viewer-container { background: #000; border-radius: 10px; margin: 20px 0; overflow: hidden; min-height: 250px; display: flex; align-items: center; justify-content: center; }
         .viewer-img { width: 100%; height: auto; display: block; }
-        .nav-buttons { display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; border-radius: 0 0 10px 10px; }
+        .nav-buttons { display: flex; justify-content: space-between; padding: 10px; }
+        
+        /* Disseny Matriu 5x5 */
+        .grid-5x5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; width: 225px; margin: 15px auto; }
+        .cell { width: 40px; height: 40px; background: #eee; border: 1px solid #ccc; cursor: pointer; border-radius: 4px; }
+        .cell.active { background: var(--secondary); box-shadow: inset 0 0 8px rgba(0,0,0,0.2); }
+        
         .lock-box { background: #fff3cd; padding: 20px; border: 2px dashed #ffc107; border-radius: 10px; margin: 15px 0; }
-        #code-input { width: 100px; text-align: center; font-size: 2rem; letter-spacing: 5px; }
         #display-timer { font-size: 2.5rem; font-family: monospace; color: var(--danger); margin: 10px 0; }
+        #code-input { width: 80%; text-align: center; font-size: 1.5rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
     <div id="step-school">
         <h2>Benvinguts a la Microbitada</h2>
-        <p>Selecciona la teva escola per començar:</p>
         <select id="school-list">
             <option value="" disabled selected>Tria escola...</option>
-            <option value="Escola 1">Escola 1</option>
-            <option value="Escola 2">Escola 2</option>
-            <option value="Escola 3">Escola 3</option>
-            <option value="Escola 4">Escola 4</option>
-            <option value="Escola 5">Escola 5</option>
-            <option value="Escola 6">Escola 6</option>
-            <option value="Escola 7">Escola 7</option>
-            <option value="Escola 8">Escola 8</option>
-        </select>
-        <br><br>
+            <option value="Escola 1">Escola 1</option><option value="Escola 2">Escola 2</option>
+            <option value="Escola 3">Escola 3</option><option value="Escola 4">Escola 4</option>
+            <option value="Escola 5">Escola 5</option><option value="Escola 6">Escola 6</option>
+        </select><br><br>
         <button class="btn-main" onclick="goToGroups()">Següent</button>
     </div>
 
     <div id="step-groups" class="hidden">
-        <h3 id="school-name-header" style="color:var(--primary)"></h3>
-        <h2 id="group-title">Nom del Grup 1</h2>
-        <input type="text" id="main-input" placeholder="Ex: Els Súpers">
-        
-        <div id="group-preview" class="hidden" style="text-align:left; background:#eee; padding:10px; margin:10px auto; width:80%;">
+        <p style="color:var(--danger); font-weight:bold;">⚠️ Comença el nom amb el número d'equip (1-5)</p>
+        <h2 id="group-title">Nom del Grup</h2>
+        <input type="text" id="main-input" placeholder="Ex: 1 Els Súpers">
+        <div id="group-preview" class="hidden" style="text-align:left; background:#f8f9fa; padding:10px; margin:10px auto; width:80%;">
             <strong>Membres:</strong> <ul id="list-members"></ul>
         </div>
-
         <div style="margin-top:15px;">
-            <button id="action-btn" class="btn-main" onclick="processLogic()">Afegir Grup</button>
+            <button id="action-btn" class="btn-main" onclick="processLogic()">Afegir Grup / Membre</button>
             <button id="next-group-btn" class="hidden" style="background:var(--secondary); color:white" onclick="resetForNewGroup()">Nou Grup</button>
         </div>
         <button id="finalize-btn" class="btn-finish hidden" onclick="prepareToStart()">FINALITZAR CONFIGURACIÓ</button>
@@ -72,26 +65,34 @@
     <div id="step-challenge" class="hidden">
         <div id="display-timer">00:00</div>
         <div class="viewer-container">
-            <img src="" id="current-img" class="viewer-img" alt="Carregant imatge...">
+            <img src="" id="current-img" class="viewer-img">
         </div>
+        
         <div id="navigation-zone" class="nav-buttons">
             <button id="btn-prev" class="btn-nav" onclick="nav(-1)">⬅ Enrere</button>
             <button id="btn-next" class="btn-nav" onclick="nav(1)">Endavant ➡</button>
         </div>
+
         <div id="lock-zone" class="lock-box hidden">
-            <h3>🔒 REPTE BLOQUEJAT</h3>
-            <p>Introdueix el codi de 3 xifres:</p>
-            <input type="number" id="code-input" placeholder="000">
-            <br>
-            <button class="btn-main" onclick="validateCode()">VERIFICAR</button>
+            <h3 id="lock-title">🔒 REPTE BLOQUEJAT</h3>
+            
+            <div id="ui-code-container">
+                <input type="text" id="code-input" placeholder="Escriu aquí...">
+                <button class="btn-main" onclick="validateLock()">VERIFICAR</button>
+            </div>
+
+            <div id="ui-matrix-container" class="hidden">
+                <div class="grid-5x5" id="matrix-grid"></div>
+                <button class="btn-main" onclick="validateLock()">VERIFICAR PATRÓ</button>
+            </div>
         </div>
-        <button id="btn-finish-all" class="btn-finish hidden" onclick="endGroupSession()">🏆 ACABAR REPTE 🏆</button>
+
+        <button id="btn-finish-all" class="btn-finish hidden" onclick="endGroupSession()">🏆 ACABAR GIMCANA 🏆</button>
     </div>
 
     <div id="step-results" class="hidden">
         <h2>Classificació Final</h2>
-        <h4 id="result-school-title"></h4>
-        <table style="width:100%; border-collapse: collapse;">
+        <table style="width:100%; border-collapse: collapse;" id="leaderboard">
             <thead><tr style="background:#ddd"><th>Pos</th><th>Grup</th><th>Temps</th></tr></thead>
             <tbody id="leaderboard-rows"></tbody>
         </table>
@@ -100,79 +101,68 @@
 </div>
 
 <script>
-    // --- CONFIGURACIÓ URLS ---
     const BASE_URL = "https://raw.githubusercontent.com/aespino2-create/Microbitada-imatges/main";
-    const images = [
-        BASE_URL + "/01.jpg",
-        BASE_URL + "/02.jpg",
-        BASE_URL + "/03.jpg",
-        BASE_URL + "/04.jpg",
-        BASE_URL + "/05.jpg",
-        BASE_URL + "/06.jpg",
-        BASE_URL + "/07.jpg",
-        BASE_URL + "/08.jpg",
-        BASE_URL + "/09.jpg",
-        BASE_URL + "/10.jpg"
-    ];
-    const SECRET_CODE = "123"; 
+    
+    // CLAUS PER EQUIP (1 a 5)
+    const GROUP_KEYS = {
+        "1": { c3: "123", p1: [0,1,2], word: "ROBOTS", c4: "4444", p2: [20,21,22] },
+        "2": { c3: "456", p1: [5,6,7], word: "CODING", c4: "1122", p2: [15,16,17] },
+        "3": { c3: "789", p1: [0,5,10], word: "PYTHON", c4: "9876", p2: [4,9,14] },
+        "4": { c3: "321", p1: [2,7,12], word: "PLATES", c4: "2024", p2: [24,23,22] },
+        "5": { c3: "654", p1: [1,2,3], word: "FUTURE", c4: "5555", p2: [0,6,12] }
+    };
 
-    // --- ESTAT ---
-    let school = "";
-    let allGroups = [];
-    let tempGroup = { name: "", members: [] };
-    let namingPhase = true;
-    let activeGroupIdx = 0;
-    let currentImgIdx = 0;
-    let timerInterval;
-    let startTime;
-    let codeUnlocked = false;
+    // Estructura del joc: quan s'arriba a X imatge, bloqueja.
+    const GAME_FLOW = [
+        { imgTrigger: 5,  type: 'code',   key: 'c3', title: "Codi de 3 xifres" }, // Després de 6 imatges (0-5)
+        { imgTrigger: 9,  type: 'matrix', key: 'p1', title: "Patró 5x5 (1)" },      // Després de 4 imatges més
+        { imgTrigger: 13, type: 'code',   key: 'word', title: "Paraula de 6 lletres" }, // Després de 4 imatges més
+        { imgTrigger: 17, type: 'code',   key: 'c4', title: "Codi de 4 xifres" }, // Després de 4 imatges més
+        { imgTrigger: 22, type: 'matrix', key: 'p2', title: "Patró 5x5 Final" }      // Després de 5 imatges més
+    ];
+
+    let school = "", allGroups = [], tempGroup = { name: "", members: [] };
+    let activeGroupIdx = 0, currentImgIdx = 0, timerInterval, startTime, currentGroupNum = "1";
     let finalRanking = [];
 
-    // --- FUNCIONS NAVEGACIÓ ---
+    // Crear la matriu visualment
+    const matrixGrid = document.getElementById('matrix-grid');
+    for(let i=0; i<25; i++) {
+        let cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.onclick = () => cell.classList.toggle('active');
+        matrixGrid.appendChild(cell);
+    }
+
     function goToGroups() {
-        const list = document.getElementById('school-list');
-        school = list.value;
-        if(!school) {
-            alert("Si us plau, tria una escola.");
-            return;
-        }
+        school = document.getElementById('school-list').value;
+        if(!school) return alert("Tria escola");
         document.getElementById('step-school').classList.add('hidden');
         document.getElementById('step-groups').classList.remove('hidden');
-        document.getElementById('school-name-header').innerText = "Escola: " + school;
     }
 
     function processLogic() {
         const input = document.getElementById('main-input');
         const val = input.value.trim();
         if(!val) return;
-
-        if(namingPhase) {
+        if(!tempGroup.name) {
             tempGroup.name = val;
-            namingPhase = false;
-            input.value = "";
-            input.placeholder = "Nom de l'alumne";
-            document.getElementById('group-title').innerText = "Membres de: " + tempGroup.name;
-            document.getElementById('action-btn').innerText = "Afegir Alumne";
+            document.getElementById('group-title').innerText = "Membres de: " + val;
             document.getElementById('group-preview').classList.remove('hidden');
         } else {
             tempGroup.members.push(val);
-            const li = document.createElement('li');
-            li.textContent = val;
+            let li = document.createElement('li'); li.textContent = val;
             document.getElementById('list-members').appendChild(li);
-            input.value = "";
-            document.getElementById('next-group-btn').classList.remove('hidden');
-            document.getElementById('finalize-btn').classList.remove('hidden');
         }
+        input.value = "";
+        document.getElementById('next-group-btn').classList.remove('hidden');
+        document.getElementById('finalize-btn').classList.remove('hidden');
     }
 
     function resetForNewGroup() {
         allGroups.push(JSON.parse(JSON.stringify(tempGroup)));
         tempGroup = { name: "", members: [] };
-        namingPhase = true;
-        const input = document.getElementById('main-input');
-        input.placeholder = "Nom del grup";
-        document.getElementById('group-title').innerText = "Nom del Grup " + (allGroups.length + 1);
-        document.getElementById('action-btn').innerText = "Afegir Grup";
+        document.getElementById('group-title').innerText = "Nom del Grup";
         document.getElementById('list-members').innerHTML = "";
         document.getElementById('group-preview').classList.add('hidden');
         document.getElementById('next-group-btn').classList.add('hidden');
@@ -182,14 +172,17 @@
         if(tempGroup.name) allGroups.push(JSON.parse(JSON.stringify(tempGroup)));
         document.getElementById('step-groups').classList.add('hidden');
         document.getElementById('step-start').classList.remove('hidden');
-        document.getElementById('current-group-name').innerText = allGroups[activeGroupIdx].name;
+        let gName = allGroups[activeGroupIdx].name;
+        document.getElementById('current-group-name').innerText = gName;
+        currentGroupNum = gName.charAt(0); // Identifica 1, 2, 3, 4 o 5
+        if(!GROUP_KEYS[currentGroupNum]) currentGroupNum = "1"; 
     }
 
     function initChallenge() {
         document.getElementById('step-start').classList.add('hidden');
         document.getElementById('step-challenge').classList.remove('hidden');
         currentImgIdx = 0;
-        codeUnlocked = false;
+        GAME_FLOW.forEach(f => f.passed = false);
         updateViewer();
         startTime = Date.now();
         timerInterval = setInterval(updateTimer, 1000);
@@ -203,25 +196,63 @@
     }
 
     function updateViewer() {
-        const img = document.getElementById('current-img');
-        img.src = images[currentImgIdx];
+        // Carrega imatges del 01.jpg al 25.jpg
+        const imgNum = (currentImgIdx + 1).toString().padStart(2,'0');
+        document.getElementById('current-img').src = `${BASE_URL}/${imgNum}.jpg`;
+
+        const lock = GAME_FLOW.find(f => f.imgTrigger === currentImgIdx);
         
-        document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
-        
-        if(currentImgIdx === 5 && !codeUnlocked) {
+        if(lock && !lock.passed) {
             document.getElementById('navigation-zone').classList.add('hidden');
             document.getElementById('lock-zone').classList.remove('hidden');
+            document.getElementById('lock-title').innerText = "🔒 " + lock.title;
+            
+            if(lock.type === 'matrix') {
+                document.getElementById('ui-code-container').classList.add('hidden');
+                document.getElementById('ui-matrix-container').classList.remove('hidden');
+                document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
+            } else {
+                document.getElementById('ui-code-container').classList.remove('hidden');
+                document.getElementById('ui-matrix-container').classList.add('hidden');
+                document.getElementById('code-input').value = "";
+            }
         } else {
             document.getElementById('navigation-zone').classList.remove('hidden');
             document.getElementById('lock-zone').classList.add('hidden');
+            document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
+            
+            // L'última imatge és la 24 (total 25)
+            if(currentImgIdx >= 24) {
+                document.getElementById('btn-next').classList.add('hidden');
+                document.getElementById('btn-finish-all').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-next').classList.remove('hidden');
+                document.getElementById('btn-finish-all').classList.add('hidden');
+            }
+        }
+    }
+
+    function validateLock() {
+        const lock = GAME_FLOW.find(f => f.imgTrigger === currentImgIdx);
+        const keys = GROUP_KEYS[currentGroupNum];
+        let isCorrect = false;
+
+        if(lock.type === 'matrix') {
+            const selected = Array.from(document.querySelectorAll('.cell'))
+                                  .map((c, i) => c.classList.contains('active') ? i : null)
+                                  .filter(v => v !== null);
+            const target = keys[lock.key];
+            isCorrect = selected.length === target.length && selected.every(v => target.includes(v));
+        } else {
+            const input = document.getElementById('code-input').value.trim().toUpperCase();
+            isCorrect = (input === keys[lock.key]);
         }
 
-        if(currentImgIdx === images.length - 1) {
-            document.getElementById('btn-next').classList.add('hidden');
-            document.getElementById('btn-finish-all').classList.remove('hidden');
+        if(isCorrect) {
+            lock.passed = true;
+            nav(1);
         } else {
-            document.getElementById('btn-next').classList.remove('hidden');
-            document.getElementById('btn-finish-all').classList.add('hidden');
+            alert("Incorrecte!");
         }
     }
 
@@ -230,55 +261,25 @@
         updateViewer();
     }
 
-    function validateCode() {
-        const input = document.getElementById('code-input').value;
-        if(input === SECRET_CODE) {
-            codeUnlocked = true;
-            nav(1);
-        } else {
-            alert("Codi incorrecte!");
-        }
-    }
-
-    // --- FUNCIÓ GOOGLE SHEETS ---
-    function enviarAGoogleSheets(escola, grup, temps) {
-        // SUBSTITUEIX "ID_FORMULARI" pel codi llarg del teu Google Form
-        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvo_g3lmgF3-olwtcpW2-ubQmXN5QC8lOazSiriLIGz1u5cQ/formResponse";
-        
-        const dades = new URLSearchParams();
-        // Substitueix entry.XXXXX pels números que t'ha donat el formulari
-        dades.append('entry.1631258756', escola); 
-        dades.append('entry.1277977719', grup);   
-        dades.append('entry.1028009594', temps);  
-
-        fetch(formURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: dades
-        }).then(() => {
-            console.log("Enviat a Google Sheets");
-        }).catch(err => console.log("Error enviant:", err));
-    }
-
     function endGroupSession() {
         clearInterval(timerInterval);
         const timeStr = document.getElementById('display-timer').innerText;
-        const currentGroupName = allGroups[activeGroupIdx].name;
+        const gName = allGroups[activeGroupIdx].name;
 
-        // ENVIAR DADES AL FULL DE CÀLCUL
-        enviarAGoogleSheets(school, currentGroupName, timeStr);
+        // Enviament Google Sheets
+        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvo_g3lmgF3-olwtcpW2-ubQmXN5QC8lOazSiriLIGz1u5cQ/formResponse";
+        const d = new URLSearchParams();
+        d.append('entry.1631258756', school);
+        d.append('entry.1277977719', gName);
+        d.append('entry.1028009594', timeStr);
+        fetch(formURL, { method: 'POST', mode: 'no-cors', body: d });
 
-        finalRanking.push({ 
-            name: currentGroupName, 
-            timeStr: timeStr, 
-            timeMs: Date.now() - startTime 
-        });
+        finalRanking.push({ name: gName, time: timeStr, ms: Date.now() - startTime });
         
         activeGroupIdx++;
         if(activeGroupIdx < allGroups.length) {
             document.getElementById('step-challenge').classList.add('hidden');
             document.getElementById('step-start').classList.remove('hidden');
-            document.getElementById('current-group-name').innerText = allGroups[activeGroupIdx].name;
         } else {
             showFinalResults();
         }
@@ -287,12 +288,11 @@
     function showFinalResults() {
         document.getElementById('step-challenge').classList.add('hidden');
         document.getElementById('step-results').classList.remove('hidden');
-        document.getElementById('result-school-title').innerText = "Escola: " + school;
-        finalRanking.sort((a,b) => a.timeMs - b.timeMs);
+        finalRanking.sort((a,b) => a.ms - b.ms);
         const tbody = document.getElementById('leaderboard-rows');
         tbody.innerHTML = "";
         finalRanking.forEach((res, i) => {
-            tbody.innerHTML += "<tr><td>" + (i+1) + "</td><td>" + res.name + "</td><td>" + res.timeStr + "</td></tr>";
+            tbody.innerHTML += `<tr><td>${i+1}</td><td>${res.name}</td><td>${res.time}</td></tr>`;
         });
     }
 </script>
