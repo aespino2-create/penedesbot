@@ -70,6 +70,13 @@
         
         <div id="viewer-zone">
             <div class="viewer-container"><img src="" id="current-img" class="viewer-img"></div>
+            
+            <div id="prog-link-zone" class="hidden" style="margin: 10px 0;">
+                <a href="https://makecode.microbit.org/S17832-99665-57486-11507" target="_blank" style="text-decoration:none;">
+                    <button class="btn-main" style="background-color: var(--secondary);">Programació</button>
+                </a>
+            </div>
+
             <div id="navigation-zone" class="nav-buttons">
                 <button id="btn-prev" class="btn-nav" onclick="nav(-1)">⬅ Enrere</button>
                 <button id="btn-next" class="btn-nav" onclick="nav(1)">Endavant ➡</button>
@@ -115,7 +122,6 @@
         "5": { c3: "043", p1: [1,2,3], word: "ROBOTS", c4: "3679", p2: [0,2,4,6,8,24] }
     };
 
-    // Els triggers ara apunten a la posició lògica on "salta" el bloqueig
     const GAME_FLOW = [
         { imgTrigger: 6,  type: 'code',   key: 'c3', title: "Codi de 3 xifres" },
         { imgTrigger: 11, type: 'matrix', key: 'p1', title: "Patró 5x5 (1)" },
@@ -220,7 +226,6 @@
             document.getElementById('viewer-zone').classList.remove('hidden');
             document.getElementById('lock-zone').classList.add('hidden');
             
-            // Calculem la imatge real restant els punts de bloqueig superats
             let realImgIdx = currentImgIdx;
             GAME_FLOW.forEach(f => { if(currentImgIdx > f.imgTrigger) realImgIdx--; });
             
@@ -229,7 +234,16 @@
 
             document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
             
-            if(realImgIdx >= 24) {
+            // LÒGICA MODIFICADA: Mostrar botó Programació a la imatge 23 física (índex real 22)
+            const progLinkZone = document.getElementById('prog-link-zone');
+            if(realImgIdx === 22) {
+                progLinkZone.classList.remove('hidden');
+            } else {
+                progLinkZone.classList.add('hidden');
+            }
+
+            // LÒGICA MODIFICADA: Acabar a la imatge 24 física (índex real 23)
+            if(realImgIdx >= 23) {
                 document.getElementById('btn-next').classList.add('hidden');
                 document.getElementById('btn-finish-all').classList.remove('hidden');
             } else {
