@@ -35,15 +35,14 @@
 <div class="container">
     <div id="step-school">
         <h2>Benvinguts a la Microbitada</h2>
-        <select id="school-list">
-            <option value="" disabled selected>Tria escola...</option>
-            <option value="Escola 1">Sant Domènec de la Ràpita (Santa Margarida i els Monjos)</option>
-            <option value="Escola 2">Ull de Vent (la Bisbal del Penedès)</option>
-            <option value="Escola 3">La Parellada (Santa Oliva)</option>
-            <option value="Escola 4">Subxarxa de Coordinació Alt Penedès</option>
-            <option value="Escola 5">Escola 5</option>
-            <option value="Escola 6">Escola 6</option>
-        </select><br><br>
+        <input type="text" id="school-input" list="school-options" placeholder="Escriu o tria la teva escola...">
+        <datalist id="school-options">
+            <option value="Sant Domènec de la Ràpita (Santa Margarida i els Monjos)">
+            <option value="Ull de Vent (la Bisbal del Penedès)">
+            <option value="La Parellada (Santa Oliva)">
+            <option value="Subxarxa de Coordinació Alt Penedès">
+        </datalist>
+        <br><br>
         <button class="btn-main" onclick="goToGroups()">Següent</button>
     </div>
 
@@ -146,8 +145,9 @@
     }
 
     function goToGroups() {
-        school = document.getElementById('school-list').value;
-        if(!school) return alert("Tria escola");
+        // Capturem el valor del camp de text (escrit o triat de la llista)
+        school = document.getElementById('school-input').value.trim();
+        if(!school) return alert("Si us plau, escriu o tria la teva escola");
         document.getElementById('step-school').classList.add('hidden');
         document.getElementById('step-groups').classList.remove('hidden');
     }
@@ -289,7 +289,6 @@
         updateViewer();
     }
 
-    // NOVA FUNCIÓ PER CONFIRMAR EL FINAL FORÇAT
     function confirmEndSession() {
         if(confirm("Segur que vols acabar la gimcana ara? S'enviaran les dades actuals.")) {
             endGroupSession();
@@ -304,6 +303,7 @@
         const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvo_g3lmgF3-olwtcpW2-ubQmXN5QC8lOazSiriLIGz1u5cQ/formResponse";
         
         const params = new URLSearchParams();
+        // Ara school conté el text real (ex: "Escola Sant Domènec")
         params.append('entry.1631258756', school);
         params.append('entry.1277977719', gName);
         params.append('entry.1028009594', timeTotal);
