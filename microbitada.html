@@ -15,6 +15,7 @@
         .btn-start { background-color: var(--success); color: white; font-size: 1.5rem; }
         .btn-nav { background-color: var(--dark); color: white; }
         .btn-finish { background-color: var(--danger); color: white; width: 100%; margin-top: 10px; }
+        .btn-emergency { background-color: #f39c12; color: white; margin-bottom: 15px; width: 100%; }
         .viewer-container { background: #000; border-radius: 10px; margin: 20px 0; overflow: hidden; min-height: 250px; display: flex; align-items: center; justify-content: center; }
         .viewer-img { width: 100%; height: auto; display: block; }
         .nav-buttons { display: flex; justify-content: space-between; padding: 10px; }
@@ -66,6 +67,8 @@
     </div>
 
     <div id="step-challenge" class="hidden">
+        <button class="btn-emergency" onclick="confirmEndSession()">Acaba la micro:bitada!</button>
+
         <div id="display-timer">00:00</div>
         
         <div id="viewer-zone">
@@ -234,7 +237,6 @@
 
             document.getElementById('btn-prev').style.visibility = (currentImgIdx === 0) ? "hidden" : "visible";
             
-            // LÒGICA MODIFICADA: Mostrar botó Programació a la imatge 23 física (índex real 22)
             const progLinkZone = document.getElementById('prog-link-zone');
             if(realImgIdx === 22) {
                 progLinkZone.classList.remove('hidden');
@@ -242,7 +244,6 @@
                 progLinkZone.classList.add('hidden');
             }
 
-            // LÒGICA MODIFICADA: Acabar a la imatge 24 física (índex real 23)
             if(realImgIdx >= 23) {
                 document.getElementById('btn-next').classList.add('hidden');
                 document.getElementById('btn-finish-all').classList.remove('hidden');
@@ -288,22 +289,34 @@
         updateViewer();
     }
 
+    // NOVA FUNCIÓ PER CONFIRMAR EL FINAL FORÇAT
+    function confirmEndSession() {
+        if(confirm("Segur que vols acabar la gimcana ara? S'enviaran les dades actuals.")) {
+            endGroupSession();
+        }
+    }
+
     function endGroupSession() {
         clearInterval(timerInterval);
         const timeTotal = document.getElementById('display-timer').innerText;
         const gName = allGroups[activeGroupIdx].name;
 
         const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdvo_g3lmgF3-olwtcpW2-ubQmXN5QC8lOazSiriLIGz1u5cQ/formResponse";
-        const d = new URLSearchParams();
-        d.append('entry.1631258756', school);
-        d.append('entry.1277977719', gName);
-        d.append('entry.1028009594', timeTotal);
-        d.append('entry.1491782480', tempsReptes.r1); 
-        d.append('entry.528386202', tempsReptes.r2);
-        d.append('entry.622185759', tempsReptes.r3);
-        d.append('entry.792747908', tempsReptes.r4);
+        
+        const params = new URLSearchParams();
+        params.append('entry.1631258756', school);
+        params.append('entry.1277977719', gName);
+        params.append('entry.1028009594', timeTotal);
+        params.append('entry.1491782480', tempsReptes.r1); 
+        params.append('entry.528386202', tempsReptes.r2);
+        params.append('entry.622185759', tempsReptes.r3);
+        params.append('entry.792747908', tempsReptes.r4);
+        
+        fetch(`${formURL}?${params.toString()}`, {
+            method: 'GET',
+            mode: 'no-cors'
+        });
 
-        fetch(formURL, { method: 'POST', mode: 'no-cors', body: d });
         finalRanking.push({ name: gName, time: timeTotal, ms: Date.now() - startTime });
         
         activeGroupIdx++;
